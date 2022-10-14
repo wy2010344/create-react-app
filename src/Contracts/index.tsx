@@ -17,20 +17,20 @@ async function contactLoader({ params }: LoaderFunctionArgs) {
 }
 const Contracts: RouteObject = {
   path: "/contacts",
-  errorElement: <ErrorPage />,
-  element: <App />,
   async loader({ request }) {
     const url = new URL(request.url)
     const q = url.searchParams.get("q")
     const contacts = await getContacts(q || '')
     return { contacts, q }
   },
-  async action() {
-    const contact = await createContact();
-    return redirect(`/contacts/${contact.id}/edit`);
-  },
+  errorElement: <ErrorPage />,
+  element: <App />,
   children: [
     {
+      async action() {
+        const contact = await createContact();
+        return redirect(`/contacts/${contact.id}/edit`);
+      },
       errorElement: <ErrorPage />,
       children: [
         {
@@ -48,6 +48,7 @@ const Contracts: RouteObject = {
         {
           path: ":contactId",
           loader: contactLoader,
+          errorElement: <ErrorPage />,
           async action({ request, params }) {
             let formData = await request.formData();
             return updateContact(params.contactId || '', {
@@ -71,14 +72,15 @@ const Contracts: RouteObject = {
           path: ":contactId/destroy",
           errorElement: <div>Oops! There was an error.</div>,
           async action({ params }) {
-            throw new Error("oh dang!");
+            //throw new Error("oh dang!");
             await deleteContact(params.contactId || '')
-            redirect('/')
+            return redirect('/contacts')
           }
         }
       ]
     }
-  ]
+  ],
+
 }
 export default Contracts
 function App() {

@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Contracts from './Contracts';
 import ErrorPage from './Contracts/ErrorPage';
+import SamSelikoff from './sam-selikoff';
 
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     element: <h1 className="text-3xl font-bold underline">
       Hello world!
     </h1>
+  },
+  {
+    path: "sam-selikoff",
+    element: <SamSelikoff />
   }
 ])
 const root = ReactDOM.createRoot(
