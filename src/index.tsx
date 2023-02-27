@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { ComponentType, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Contracts from './Contracts';
 import ErrorPage from './Contracts/ErrorPage';
-import SamSelikoff from './sam-selikoff';
 import DraggableList from './drag/draggable-list';
 import CardsStack from './drag/cards-stack';
 import Sheet from './drag/sheet';
@@ -19,8 +18,18 @@ import ImageGallery from './motion/image-gallery';
 import LineChartD3 from './sam-selikoff/line-chart-d3';
 import ClickDropDown from './ClickDropDown'
 import SimpleCodeEditor from './SimpleCodeEditor';
+import Scroll from './motion/scroll';
+import Rc18Learn from "./rc18learn"
+import ButtonSheetFixed from './motion/ButtonSheetFixed';
+import RouterTest from './router-test';
 
-
+function dynamic<T extends ComponentType<any>>(
+  factory: () => Promise<{ default: T }>,
+  args: (T extends ComponentType<infer M> ? M : {})
+) {
+  const Component = lazy(factory)
+  return <Component {...args} />
+}
 function link(href: string, display?: string) {
   return <div>
     <a href={href}>{display || href}</a>
@@ -37,9 +46,11 @@ function App() {
     {link("drag/card-zoom")}
     {link("drag/scroll-tabs")}
     {link("motion/image-gallery")}
+    {link("motion/scroll")}
     {link("sam-selikoff/line-chart-d3")}
     {link("clickdropdown")}
     {link("simplecodeeditor")}
+    {link("motion/buttonSheet")}
   </>
 }
 
@@ -49,6 +60,16 @@ const router = createBrowserRouter([
     element: <App />
   },
   Contracts,
+  {
+    path: "router/1",
+    element: <RouterTest to="/router/2" />
+  },
+  {
+    path: "router/2",
+    element: <RouterTest to="/router/1" >
+      <button>test</button>
+    </RouterTest>
+  },
   {
     path: "test",
     element: <h1 className="text-3xl font-bold underline">
@@ -64,11 +85,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <SamSelikoff />,
+        element: dynamic(() => import("./sam-selikoff"), {}),
       },
       {
         path: "line-chart-d3",
-        element: <LineChartD3 />
+        element: dynamic(() => import('./sam-selikoff/line-chart-d3'), {}),
       }
     ]
   },
@@ -77,11 +98,27 @@ const router = createBrowserRouter([
     element: <I18nx />
   },
   {
+    path: "rc18learn",
+    element: <Rc18Learn />
+  },
+  {
     path: "motion",
     children: [
       {
         path: "image-gallery",
         element: <ImageGallery />
+      },
+      {
+        path: "scroll",
+        element: dynamic(() => import('./motion/scroll'), {})
+      },
+      {
+        path: "bottomSheet",
+        element: dynamic(() => import('./motion/ButtonSheetFixed'), {})
+      },
+      {
+        path: "test",
+        element: dynamic(() => import('./motion/motion-test'), {})
       }
     ]
   },
@@ -130,6 +167,9 @@ const router = createBrowserRouter([
   {
     path: "simplecodeeditor",
     element: <SimpleCodeEditor />
+  },
+  {
+    path: "giveaway"
   }
 ])
 const root = ReactDOM.createRoot(

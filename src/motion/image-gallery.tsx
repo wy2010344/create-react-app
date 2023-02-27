@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from "framer-motion";
-import { wrap } from "popmotion";
+import { motion, AnimatePresence, wrap } from "framer-motion";
 import styled from 'styled-components';
 
 const variants = {

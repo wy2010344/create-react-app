@@ -1,5 +1,49 @@
 import React, { Fragment } from 'react'
-import { MapDefine, renderXMLFun } from './xml'
+import { GetDefine, getRenderXMLFun, XMLParams } from './xml'
+
+
+
+
+// function joinFragment(vs: React.ReactNode[]) {
+//   return React.createElement(Fragment, {}, ...vs)
+// }
+export type RenderFun<T> = (arg: XMLParams<T>) => T
+export type MapDefine<T> = {
+  [key in string]: string | number | T | RenderFun<T>
+}
+function mapToSingle<T>(defMap: MapDefine<T>): GetDefine<T> {
+  return function (tag, value) {
+    const def = defMap[tag]
+    if (typeof (def) == 'function') {
+      return (def as any)(value)
+    } else {
+      return def
+    }
+  }
+}
+const renderXML2StrJoin = getRenderXMLFun<string | number>(function (vs) {
+  return vs.join('')
+})
+export function renderXML2Str(value: string, def?: MapDefine<string | number>) {
+  if (def) {
+    return renderXML2StrJoin(value, mapToSingle(def))
+  } else {
+    return value
+  }
+}
+
+const renderXML2RenderJoin = getRenderXMLFun<React.ReactNode>(function (vs) {
+  return React.createElement(React.Fragment, {}, ...vs)
+})
+
+export function renderXML2Rc(value: string, def?: MapDefine<React.ReactNode>) {
+  if (def) {
+    return renderXML2RenderJoin(value, mapToSingle(def))
+  } else {
+    return value
+  }
+}
+
 const xml = `
 aewf
 fewa <a> d ww </a>
@@ -17,7 +61,7 @@ export default function index() {
     <div>
       <button onClick={() => {
       }}>点击</button>
-      <div>{rcT(xml, {
+      <div>{renderXML2Rc(xml, {
         a(args) {
           //return React.createElement('a', {}, ...args.children)
           return <a>{args.children}</a>
@@ -35,18 +79,4 @@ export default function index() {
       })}</div>
     </div>
   )
-}
-
-
-function sT(xml: string, map?: MapDefine<string | number>) {
-  return renderXMLFun(xml, (map || {} as any), join)
-}
-function rcT(xml: string, map: MapDefine<React.ReactNode>) {
-  return renderXMLFun(xml, map, joinFragment)
-}
-function join(vs: (string | number)[]) {
-  return vs.join('')
-}
-function joinFragment(vs: React.ReactNode[]) {
-  return React.createElement(Fragment, {}, ...vs)
 }

@@ -1,6 +1,5 @@
 import { useDrag } from '@use-gesture/react'
-import { motion } from 'framer-motion'
-import { clamp } from 'popmotion'
+import { motion, clamp } from 'framer-motion'
 import React, { useRef, useState } from 'react'
 import { useSprings, animated } from 'react-spring'
 import styled from 'styled-components'

@@ -17,7 +17,8 @@ export function FirstNoAnimateContext({
   return <FEndContext.Provider value={parentAnimationFinished && allowAnimated}>{children}</FEndContext.Provider>
 }
 
-export type MDivProps = Omit<HTMLMotionProps<"div">, "isFinished" | "thisRef"> & {
+export type MDivProps = Omit<HTMLMotionProps<"div">, "isFinished" | "thisRef" | "children"> & {
+  children?: React.ReactNode
   thisRef?: React.Ref<HTMLDivElement>
 }
 export default function MDiv({
@@ -33,7 +34,8 @@ export function MBaseDiv<T extends HTMLTag = 'div'>({
   isFinished,
   thisRef,
   ...props
-}: HTMLMotionProps<T> & {
+}: Omit<HTMLMotionProps<T>, 'children'> & {
+  children?: React.ReactNode
   asType?: T
   thisRef?: React.Ref<RefE<T>>
   isFinished(v: any): boolean
