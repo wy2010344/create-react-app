@@ -39,6 +39,11 @@ function fn(order: number[], active = false, originalIndex = 0, curIndex = 0, y 
     }
   }
 }
+
+/**
+ * 如何做成动态添加的?
+ * @returns 
+ */
 export default function DraggableList() {
   const [order, setOrder] = useState(items.map((_, index) => index))
   const [springs, api] = useSprings(items.length, fn(order))

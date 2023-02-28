@@ -1,11 +1,9 @@
-import React, { ComponentType, lazy } from 'react';
+import { ComponentType, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Contracts from './Contracts';
-import ErrorPage from './Contracts/ErrorPage';
-import DraggableList from './drag/draggable-list';
 import CardsStack from './drag/cards-stack';
 import Sheet from './drag/sheet';
 import InfiniteSlideshow from './drag/infinite-slideshow';
@@ -15,12 +13,9 @@ import Viewpaper from './drag/viewpaper';
 import CardZoom from './drag/card-zoom';
 import ScrollTabs from './drag/scroll-tabs';
 import ImageGallery from './motion/image-gallery';
-import LineChartD3 from './sam-selikoff/line-chart-d3';
 import ClickDropDown from './ClickDropDown'
 import SimpleCodeEditor from './SimpleCodeEditor';
-import Scroll from './motion/scroll';
 import Rc18Learn from "./rc18learn"
-import ButtonSheetFixed from './motion/ButtonSheetFixed';
 import RouterTest from './router-test';
 
 function dynamic<T extends ComponentType<any>>(
@@ -40,17 +35,25 @@ function App() {
     {link("test")}
     {link("drag/draggable-list")}
     {link("drag/cards-stack")}
-    {link("drag/sheet")}
-    {link("drag/infinite-slideshow")}
+    {link("drag/sheet", `
+      即bottom-sheet
+    `)}
+    {link("drag/infinite-slideshow", `
+      无限拖动
+    `)}
     {link("drag/viewpaper")}
     {link("drag/card-zoom")}
     {link("drag/scroll-tabs")}
-    {link("motion/image-gallery")}
+    {link("motion/image-gallery", `
+      一个motion制作的单页的carousel
+    `)}
     {link("motion/scroll")}
+    {link("motion/scroll-demo3")}
+    {link("motion/scroll-demo4")}
+    {link("motion/bottomsheet")}
     {link("sam-selikoff/line-chart-d3")}
     {link("clickdropdown")}
     {link("simplecodeeditor")}
-    {link("motion/buttonSheet")}
   </>
 }
 
@@ -113,8 +116,16 @@ const router = createBrowserRouter([
         element: dynamic(() => import('./motion/scroll'), {})
       },
       {
-        path: "bottomSheet",
-        element: dynamic(() => import('./motion/ButtonSheetFixed'), {})
+        path: "scroll-demo3",
+        element: dynamic(() => import('./motion/scroll-demo3'), {})
+      },
+      {
+        path: "scroll-demo4",
+        element: dynamic(() => import('./motion/scroll-demo4'), {})
+      },
+      {
+        path: "bottomsheet",
+        element: dynamic(() => import('./motion/BottomSheetFixed'), {})
       },
       {
         path: "test",
@@ -127,7 +138,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "draggable-list",
-        element: <DraggableList />
+        element: dynamic(() => import('./drag/draggable-list'), {})
       },
       {
         path: "cards-stack",
@@ -185,3 +196,4 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+

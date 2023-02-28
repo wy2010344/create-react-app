@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence, wrap } from "framer-motion";
 import styled from 'styled-components';
+import { useEvent } from '../useEvent';
 
 const variants = {
   enter: (direction: number) => {
@@ -28,13 +29,30 @@ const images = [
   "https://d33wubrfki0l68.cloudfront.net/594de66469079c21fc54c14db0591305a1198dd6/3f4b1/static/images/wallpapers/bridge-01@2x.png"
 ];
 
+/**
+ * 可以做无限滚动 carousel
+ * @returns 
+ */
 export default function ImageGallery() {
   const [[page, direction], setPage] = useState([0, 0]);
 
   const imageIndex = wrap(0, images.length, page)
-  function paginate(direction: number) {
+  const paginate = useEvent(function (direction: number) {
     setPage([page + direction, direction])
-  }
+  })
+
+  const [onDrag, setOnDrag] = useState(false)
+  useEffect(() => {
+    if (!onDrag) {
+      const inv = setInterval(() => {
+        paginate(1)
+      }, 1000)
+      return function () {
+        clearInterval(inv)
+      }
+    }
+  }, [onDrag])
+
   return (
     <ImageGalleryWrapper>
       <AnimatePresence initial={false} custom={direction}>
@@ -59,6 +77,9 @@ export default function ImageGallery() {
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={1}
+          onDragStart={() => {
+            setOnDrag(true)
+          }}
           onDragEnd={(e, { offset, velocity }) => {
             const swipe = swipePower(offset.x, velocity.x);
             console.log(swipe, offset.x, velocity, swipeConfidenceThreshold)
@@ -67,6 +88,7 @@ export default function ImageGallery() {
             } else if (swipe > swipeConfidenceThreshold) {
               paginate(-1);
             }
+            setOnDrag(false)
           }}
         />
       </AnimatePresence>
