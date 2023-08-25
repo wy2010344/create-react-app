@@ -1,195 +1,48 @@
-import { ComponentType, lazy } from 'react';
+
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Contracts from './Contracts';
-import CardsStack from './drag/cards-stack';
-import Sheet from './drag/sheet';
+import DraggableList from './drag/draggable-list-enter';
 import InfiniteSlideshow from './drag/infinite-slideshow';
-import I18nx from './i18nx';
-import DragHandlerDemo from './react-beautiful-dnd/drag-handler-demo'
-import Viewpaper from './drag/viewpaper';
-import CardZoom from './drag/card-zoom';
-import ScrollTabs from './drag/scroll-tabs';
-import ImageGallery from './motion/image-gallery';
-import ClickDropDown from './ClickDropDown'
-import SimpleCodeEditor from './SimpleCodeEditor';
-import Rc18Learn from "./rc18learn"
-import RouterTest from './router-test';
+import './index.css';
+import BottomSheetFixed from './motion/BottomSheetFixed';
+import ReorderTest from './motion/reorder-test';
+import reportWebVitals from './reportWebVitals';
+import { Main } from './main'
 
-function dynamic<T extends ComponentType<any>>(
-  factory: () => Promise<{ default: T }>,
-  args: (T extends ComponentType<infer M> ? M : {})
-) {
-  const Component = lazy(factory)
-  return <Component {...args} />
-}
-function link(href: string, display?: string) {
-  return <div>
-    <a href={href}>{display || href}</a>
-  </div>
-}
-function App() {
-  return <>
-    {link("test")}
-    {link("drag/draggable-list")}
-    {link("drag/cards-stack")}
-    {link("drag/sheet", `
-      即bottom-sheet
-    `)}
-    {link("drag/infinite-slideshow", `
-      无限拖动
-    `)}
-    {link("drag/viewpaper")}
-    {link("drag/card-zoom")}
-    {link("drag/scroll-tabs")}
-    {link("motion/image-gallery", `
-      一个motion制作的单页的carousel
-    `)}
-    {link("motion/scroll")}
-    {link("motion/scroll-demo3")}
-    {link("motion/scroll-demo4")}
-    {link("motion/bottomsheet")}
-    {link("sam-selikoff/line-chart-d3")}
-    {link("clickdropdown")}
-    {link("simplecodeeditor")}
-  </>
-}
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />
-  },
-  Contracts,
-  {
-    path: "router/1",
-    element: <RouterTest to="/router/2" />
-  },
-  {
-    path: "router/2",
-    element: <RouterTest to="/router/1" >
-      <button>test</button>
-    </RouterTest>
-  },
-  {
-    path: "test",
-    element: <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  },
-  {
-    path: "clickdropdown",
-    element: <ClickDropDown />
-  },
-  {
-    path: "sam-selikoff",
-    children: [
-      {
-        index: true,
-        element: dynamic(() => import("./sam-selikoff"), {}),
-      },
-      {
-        path: "line-chart-d3",
-        element: dynamic(() => import('./sam-selikoff/line-chart-d3'), {}),
-      }
-    ]
-  },
-  {
-    path: "i18nx",
-    element: <I18nx />
-  },
-  {
-    path: "rc18learn",
-    element: <Rc18Learn />
-  },
-  {
-    path: "motion",
-    children: [
-      {
-        path: "image-gallery",
-        element: <ImageGallery />
-      },
-      {
-        path: "scroll",
-        element: dynamic(() => import('./motion/scroll'), {})
-      },
-      {
-        path: "scroll-demo3",
-        element: dynamic(() => import('./motion/scroll-demo3'), {})
-      },
-      {
-        path: "scroll-demo4",
-        element: dynamic(() => import('./motion/scroll-demo4'), {})
-      },
-      {
-        path: "bottomsheet",
-        element: dynamic(() => import('./motion/BottomSheetFixed'), {})
-      },
-      {
-        path: "test",
-        element: dynamic(() => import('./motion/motion-test'), {})
-      }
-    ]
-  },
-  {
-    path: "drag",
-    children: [
-      {
-        path: "draggable-list",
-        element: dynamic(() => import('./drag/draggable-list'), {})
-      },
-      {
-        path: "cards-stack",
-        element: <CardsStack />
-      },
-      {
-        path: "sheet",
-        element: <Sheet />
-      },
-      {
-        path: "infinite-slideshow",
-        element: <InfiniteSlideshow />
-      },
-      {
-        path: "viewpaper",
-        element: <Viewpaper />
-      },
-      {
-        path: "card-zoom",
-        element: <CardZoom />
-      },
-      {
-        path: "scroll-tabs",
-        element: <ScrollTabs />
-      }
-    ]
-  },
-  {
-    path: "react-beautiful-dnd",
-    children: [
-      {
-        path: "drag-handler-demo",
-        element: <DragHandlerDemo />
-      }
-    ]
-  },
-  {
-    path: "simplecodeeditor",
-    element: <SimpleCodeEditor />
-  },
-  {
-    path: "giveaway"
-  }
-])
+import SpringTest from './useSpring/test'
+import NestAnimate from './motion/NestAnimate';
+import BottomSheetPanel from './motion/BottomSheetPanel';
+import ControlInput from './ControlInput';
+import RenderSetState from './rc18learn/RenderSetState';
+import MovieApp from './movies';
+import BenchMartHook from './BenchMartHook';
+import RacFramerTabs from './rac-framer-tabs';
+import UseLayoutEffectDemo from './rc18learn/useLayoutEffectDemo';
+import FlushSyncLearn from './rc18learn/FlushSyncLearn';
+import NextuiLearn from './nextui-learn';
+import PortalLearn from './rc18learn/PortalLearn';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <RouterProvider router={router} />
-  // <React.StrictMode>
-  // </React.StrictMode>
+  // <AdobeSpectrumLearn />
+  <PortalLearn />
+  // <NextuiLearn />
+  // <FlushSyncLearn />
+  // <UseLayoutEffectDemo />
+  // <RedixLearn />
+  // <DropdownMenu />
+  // <RacFramerTabs />
+  // <BenchMartHook />
+  // <MovieApp />
+  // <RenderSetState />
+  // <ControlInput />
+  // <NestAnimate initial={[1, 2, 3, 5]} />
+  // <Main />
+  // <ReorderTest />
+  // <DraggableList />
+  // <InfiniteSlideshow />
+  // <BottomSheetPanel />
+  // <SpringTest />
 );
 
 // If you want to start measuring performance in your app, pass a function

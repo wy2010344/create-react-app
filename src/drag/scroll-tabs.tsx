@@ -6,6 +6,10 @@ import { useGesture } from '@use-gesture/react';
 const options = _.times(100).map((i) => ({ label: `${i}`, value: i }));
 
 /**
+ * 
+ * 其实没啥用
+ * 不如用浏览器自带的scroll
+ * 
  * https://juejin.cn/post/6957360202618241031
  * https://codesandbox.io/s/auto-scroll-tabs-4x3ql?file=/src/App.tsx
  * 

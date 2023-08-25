@@ -23,3 +23,19 @@ body,
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: theme('colors.body');
+  color: theme('colors.white');
+}
+
+.overlay-film-cover {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom,
+      transparent 10%,
+      theme('colors.body'));
+}

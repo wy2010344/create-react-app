@@ -7,7 +7,7 @@ export default function InfiniteSlideshow() {
   return (
     <InfiniteSLideshowWrapper>
       <div className="main">
-        <Slider items={items} width={700} visible={3}>
+        <Slider items={items}>
           {({ css }, i) => (
             <SliderChild>
               <div className='marker'>{String(i).padStart(2, '0')}</div>
@@ -57,6 +57,12 @@ const styles = {
   container: { position: 'relative', height: '100%', width: '100%', touchAction: 'none' },
   item: { position: 'absolute', height: '100%', willChange: 'transform' },
 } as const
+
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
 function Slider({
   items,
   width = 600,
@@ -65,6 +71,7 @@ function Slider({
   children
 }: {
   items: any[],
+  /**宽度 */
   width?: number
   visible?: number
   style?: any
@@ -78,20 +85,22 @@ function Slider({
   const target = useRef<HTMLDivElement>(null)
 
   /**
-   * 由于是向x移动的,这里的y其实是代表x,dy代表的是方向
+   * 由于是向x移动的,这里的x其实是代表x,dx代表的是方向
+   * 
+   * 这种无限滚动,有局部的小偏移,有整体的位置偏移
    */
-  const runSprings = useCallback((y: number, dy: number) => {
-    const firstVis = idx(Math.floor(y / width) % items.length)
+  const runSprings = useCallback((x: number, dx: number) => {
+    const firstVis = idx(Math.floor(x / width) % items.length)
     //如果是逆向,
-    const firstVisIdx = dy < 0 ? items.length - visible - 1 : 1
+    const firstVisIdx = dx < 0 ? items.length - visible - 1 : 1
     api.start(i => {
       const position = getPos(i, firstVis, firstVisIdx)
       const prevPosition = getPos(i, prev.current[0], prev.current[1])
-      const rank = firstVis - (y < 0 ? items.length : 0) + position - firstVisIdx
-      const configPos = dy > 0 ? position : items.length - position
+      const rank = firstVis - (x < 0 ? items.length : 0) + position - firstVisIdx
+      const configPos = dx > 0 ? position : items.length - position
       return {
-        x: (-y % (width * items.length)) + width * rank,
-        immediate: dy < 0 ? prevPosition > position : prevPosition < position,
+        x: (-x % (width * items.length)) + width * rank,
+        immediate: dx < 0 ? prevPosition > position : prevPosition < position,
         config: {
           tension: (1 + items.length - configPos) * 100,
           friction: 30 + configPos * 40
@@ -109,6 +118,7 @@ function Slider({
       event.preventDefault()
       if (dx) {
         dragOffset.current = -x
+        console.log("vs", wheelOffset.current)
         runSprings(wheelOffset.current + -x, -dx)
       }
     },
@@ -116,11 +126,17 @@ function Slider({
       event.preventDefault()
       if (dy) {
         wheelOffset.current = y
+        console.log("ds", dragOffset.current)
         runSprings(dragOffset.current + y, dy)
       }
     }
   }, {
     target,
+    drag: {
+      eventOptions: {
+        passive: false
+      }
+    },
     wheel: {
       eventOptions: {
         passive: false

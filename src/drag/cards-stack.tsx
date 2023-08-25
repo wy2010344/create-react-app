@@ -24,12 +24,14 @@ const bind = useXXXX(state => {
     type , // 事件类型          
     target , // 事件目标        
     currentTarget , // 事件 currentTarget 
-    timeStamp , // 事件的时间戳     
+    timeStamp , // 事件的时间戳  
+
     first , // 当它是第一个事件时为真         
     last , // 当它是最后一个事件时为真          
     active , // 当手势激活时为真        
     memo , // 处理程序在上一次运行时返回的值          
-    cancel , // 你可以调用来中断一些手势的函数        
+    cancel , // 你可以调用来中断一些手势的函数
+            
     cancelled , // 手势是否被取消（拖动和捏合）      
     down , // 当鼠标按钮或触摸按下时为真          
     button , // 按下的按钮数       

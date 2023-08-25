@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@wangyang2010344/react-helper": {
+      "signature": "c88e1c170eb0cf0885f0c94d5eeec26f",
+      "file": true
+    }
+  }
+}

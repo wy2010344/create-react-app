@@ -3,14 +3,17 @@ import { useSprings, config, animated } from 'react-spring'
 import { useDrag } from '@use-gesture/react'
 import { Animated } from '@react-spring/animated'
 import styled from 'styled-components'
-const items = 'Lorem ipsum dolor sit'.split(' ')
+import { fakeData2 } from '../data/dragable-list'
 
-const backgrounds = [
-  'linear-gradient(135deg, #f6d365 0%, #fda085 100%)',
-  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-  'linear-gradient(135deg, #5ee7df 0%, #b490ca 100%)',
-  'linear-gradient(135deg, #c3cfe2 0%, #c3cfe2 100%)'
-]
+/**
+ * 转化成临时的顺序
+ * @param order : ;
+ * @param active 
+ * @param originalIndex 
+ * @param curIndex 
+ * @param y 
+ * @returns 
+ */
 function fn(order: number[], active = false, originalIndex = 0, curIndex = 0, y = 0) {
   return function (index: number) {
     if (active && index == originalIndex) {
@@ -40,6 +43,7 @@ function fn(order: number[], active = false, originalIndex = 0, curIndex = 0, y 
   }
 }
 
+const items = fakeData2
 /**
  * 如何做成动态添加的?
  * @returns 
@@ -54,6 +58,10 @@ export default function DraggableList() {
     //移动到的位置
     const curRow = clamp(Math.round(curIndex + y / 100), 0, items.length - 1)
     const newOrder = swap(order, curIndex, curRow)
+    //这个地方cancel不能return
+    // if (y > 200) {
+    //   cancel()
+    // }
     api.start(fn(newOrder, active, originalIndex, curIndex, y))
     if (!active) {
       console.log("setOrder", newOrder)
@@ -72,9 +80,9 @@ export default function DraggableList() {
               boxShadow: shadow.to(s => `rgba(0, 0, 0, 0.15) 0px ${s}px ${2 * s}px 0px`),
               y,
               scale,
-              background: backgrounds[i]
+              background: items[i].color
             }}
-            children={items[i] + 'dd' + i}
+            children={items[i].text + 'dd' + i}
           />
         ))}
       </Div>

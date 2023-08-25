@@ -1,5 +1,5 @@
 import { motion, MotionProps, useAnimation } from 'framer-motion'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 /**
@@ -14,7 +14,7 @@ export default function ButtonSheetFixed() {
         <button className="toggle" onClick={() => {
           setIsOpen(!isOpen)
         }}>Toggle</button>
-        <BottomSheet isOpen={isOpen} onOpen={() => setIsOpen(true)} onClose={() => setIsOpen(false)} />
+        <BottomSheet isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="line"></div>
       </div>
     </Wrapper>
@@ -52,16 +52,14 @@ function usePrevious<T>(value: T) {
   return previousValueRef.current;
 }
 
-function BottomSheet({ isOpen, onClose, onOpen }: {
+function BottomSheet({ isOpen, setIsOpen }: {
   isOpen?: boolean
-  onClose?(): void
-  onOpen?(): void
+  setIsOpen(v: boolean): void
 }) {
   const prevIsOpen = usePrevious(isOpen)
   const controls = useAnimation()
 
-
-  useEffect(() => {
+  useMemo(() => {
     if (prevIsOpen && !isOpen) {
       controls.start("hidden")
     } else if (!prevIsOpen && isOpen) {
@@ -76,12 +74,28 @@ function BottomSheet({ isOpen, onClose, onOpen }: {
         //是否应该关闭,导致结束时回到应该的位置
         const shouldClose = i.velocity.y > 20 || (i.velocity.y > 0 && i.point.y > 40)
         if (shouldClose) {
-          controls.start("hidden")
-          onClose?.()
+          if (isOpen) {
+            setIsOpen(false)
+          } else {
+            //可能拖拽越界了,恢复到hidden状态
+            controls.start("hidden")
+          }
         } else {
-          controls.start("visible")
-          onOpen?.()
+          if (!isOpen) {
+            setIsOpen(true)
+          } else {
+            //可能拖拽越界了,恢复到visible状态
+            controls.start("visible")
+          }
         }
+        // if (shouldClose) {
+        //   controls.start("hidden")
+
+        //   setIsOpen(false)
+        // } else {
+        //   controls.start("visible")
+        //   setIsOpen(true)
+        // }
       }}
     >
 

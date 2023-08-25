@@ -26,3 +26,10 @@ declare module "xml-reader" {
   }
   export function parseSync(xml: string): XmlNode
 }
+
+
+declare module "lethargy" {
+  export class Lethargy {
+    check(event: WheelEvent): number
+  }
+}
