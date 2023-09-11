@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence, wrap } from "framer-motion";
 import styled from 'styled-components';
 import { useEvent } from '../useEvent';
@@ -46,17 +46,20 @@ export default function ImageGallery() {
     if (!onDrag) {
       const inv = setInterval(() => {
         paginate(1)
-      }, 1000)
+      }, 3000)
       return function () {
         clearInterval(inv)
       }
     }
   }, [onDrag])
 
+  const imgRef = useRef<HTMLImageElement>(null)
+  console.log(imgRef)
   return (
-    <ImageGalleryWrapper>
+    <ImageGalleryWrapper
+    >
       <AnimatePresence initial={false} custom={direction}>
-        <motion.img
+        <motion.img ref={imgRef}
           key={page}
           src={images[imageIndex]}
           custom={direction}
@@ -80,9 +83,19 @@ export default function ImageGallery() {
           onDragStart={() => {
             setOnDrag(true)
           }}
-          onDragEnd={(e, { offset, velocity }) => {
+          onDragEnd={(e, { offset, velocity, ...args }) => {
+            const halfWidth = (imgRef.current?.clientWidth || 0) / 2
+            console.log(offset.x, halfWidth)
+            if (offset.x < -halfWidth) {
+              paginate(1)
+            } else if (offset.x > halfWidth) {
+              paginate(-1)
+            }
+            setOnDrag(false)
+            return
+
             const swipe = swipePower(offset.x, velocity.x);
-            console.log(swipe, offset.x, velocity, swipeConfidenceThreshold)
+            console.log(swipe, imgRef.current?.clientWidth, offset.x, velocity, swipeConfidenceThreshold)
             if (swipe < -swipeConfidenceThreshold) {
               paginate(1);
             } else if (swipe > swipeConfidenceThreshold) {

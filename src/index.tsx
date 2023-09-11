@@ -20,12 +20,30 @@ import UseLayoutEffectDemo from './rc18learn/useLayoutEffectDemo';
 import FlushSyncLearn from './rc18learn/FlushSyncLearn';
 import NextuiLearn from './nextui-learn';
 import PortalLearn from './rc18learn/PortalLearn';
+import CssFoldExample from './CssFoldExample';
+import D3React from './d3-react';
+import ImageGallery from './motion/image-gallery';
+import EffectCoverflow from './swiper-demo/effect-coverflow';
+import MotionCar from './motion/car'
+import AnimatedNumberDemo from './motion/animated-number';
+import AnimatedCounterDemo from './motion/animated-counter';
+import MagnifiedDock from './motion/magnified-dock';
+import LunDev from './lun-dev';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
+  <LunDev />
+  // <MagnifiedDock />
+  // <AnimatedCounterDemo />
+  // <AnimatedNumberDemo />
+  // <MotionCar />
+  // <EffectCoverflow />
+  // <ImageGallery />
+  // <D3React />
+  // <CssFoldExample />
   // <AdobeSpectrumLearn />
-  <PortalLearn />
+  // <PortalLearn />
   // <NextuiLearn />
   // <FlushSyncLearn />
   // <UseLayoutEffectDemo />

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import * as d3 from "d3";
 import useMeasure from 'react-use-measure';
 import { motion } from 'framer-motion';
@@ -12,6 +12,22 @@ export default function LineChartD3() {
 }
 
 
+const dummyData: [number, number][] = [
+  [0, 10],
+  [5, 50],
+  [15, 75],
+  [55, 100],
+  [75, 10],
+  [100, 5],
+  [120, 50]
+]
+
+const margin = {
+  top: 20,
+  right: 20,
+  bottom: 20,
+  left: 30
+}
 function ChartInner({
   width,
   height
@@ -19,37 +35,24 @@ function ChartInner({
   width: number
   height: number
 }) {
-  let dummyData: [number, number][] = [
-    [0, 10],
-    [5, 50],
-    [15, 75],
-    [55, 100],
-    [75, 10],
-    [100, 5],
-    [120, 50]
-  ]
-
-  const margin = {
-    top: 20,
-    right: 20,
-    bottom: 20,
-    left: 30
-  }
-
-  const xScale = d3.scaleLinear()
-    .domain(d3.extent(dummyData.map(d => d[0])) as any)
-    .range([margin.left, width - margin.right])
-  const yScale = d3.scaleLinear()
-    .domain(d3.extent(dummyData.map(d => d[1])) as any)
-    .range([height - margin.bottom, margin.top])
-  const line = d3.line()
-    .x(d => xScale(d[0]))
-    .y(d => yScale(d[1]))
-
-  const d = line(dummyData)!
+  const xScale = useMemo(() => {
+    const [min, max] = d3.extent(dummyData.map(d => d[0]))
+    return d3.scaleLinear()
+      .domain([min || 0, max || 0])
+      .range([margin.left, width - margin.right])
+  }, [width])
+  const yScale = useMemo(() => {
+    const [min, max] = d3.extent(dummyData.map(d => d[1]))
+    return d3.scaleLinear()
+      .domain([min || 0, max || 0])
+      //需要方向相反
+      .range([height - margin.bottom, margin.top])
+  }, [height])
   return <>
     <svg className="bg-gray-50" viewBox={`0 0 ${width} ${height}`}>
-      <motion.path d={d}
+      <motion.path d={d3.line()
+        .x(d => xScale(d[0]))
+        .y(d => yScale(d[1]))(dummyData) || ''}
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
         transition={{ duration: 1.5, delay: 0.5 }}
@@ -71,9 +74,9 @@ function ChartInner({
       {/* x的坐标 */}
       {xScale.ticks(5).map((date, i) => {
         return <g key={date} transform={`translate(${xScale(date)}, 0)`}>
-          {i % 2 == 1 && <rect width={50}
+          {/* {i % 2 == 1 && <rect width={50}
             height={height - margin.bottom}
-            fill="black" />}
+            fill="black" />} */}
           <text y={height} className='text=[10px]'
             textAnchor='middle'
           >{date}</text>
